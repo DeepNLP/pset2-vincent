@@ -362,23 +362,23 @@ def test_RNNLM():
     best_val_epoch = 0
 
     session.run(init)
-    for epoch in range(config.max_epochs):
-      print ('Epoch {}'.format(epoch))
-      start = time.time()
+    #for epoch in range(config.max_epochs):
+    #  print ('Epoch {}'.format(epoch))
+    #  start = time.time()
       ###
-      train_pp = model.run_epoch(
-          session, model.encoded_train,
-          train_op=model.train_step)
-      valid_pp = model.run_epoch(session, model.encoded_valid)
-      print ('Training perplexity: {}'.format(train_pp))
-      print ('Validation perplexity: {}'.format(valid_pp))
-      if valid_pp < best_val_pp:
-        best_val_pp = valid_pp
-        best_val_epoch = epoch
-        saver.save(session, './ptb_rnnlm.weights')
-      if epoch - best_val_epoch > config.early_stopping:
-        break
-      print ('Total time: {}'.format(time.time() - start))
+    #  train_pp = model.run_epoch(
+    #      session, model.encoded_train,
+    #      train_op=model.train_step)
+    #  valid_pp = model.run_epoch(session, model.encoded_valid)
+    #  print ('Training perplexity: {}'.format(train_pp))
+    #  print ('Validation perplexity: {}'.format(valid_pp))
+    #  if valid_pp < best_val_pp:
+    #    best_val_pp = valid_pp
+    #    best_val_epoch = epoch
+    #    saver.save(session, './ptb_rnnlm.weights')
+    #  if epoch - best_val_epoch > config.early_stopping:
+    #    break
+    # print ('Total time: {}'.format(time.time() - start))
 
     #saver.restore(session, 'ptb_rnnlm.weights')
     saver.restore(session, './ptb_rnnlm.weights')
@@ -390,7 +390,8 @@ def test_RNNLM():
     while starting_text:
       print (' '.join(generate_sentence(
           session, gen_model, gen_config, starting_text=starting_text, temp=1.0)))
-      starting_text = raw_input('> ')
+      #starting_text = raw_input("> ")
+      starting_text = input("> ")
 
 if __name__ == "__main__":
     test_RNNLM()
