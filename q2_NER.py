@@ -23,8 +23,10 @@ class Config(object):
   label_size = 5
   hidden_size = 100
   max_epochs = 24
+  #max_epochs = 1
   early_stopping = 2
-  dropout = 0.9
+  #dropout = 0.9
+  dropout = 0.95
   #learning rate
   lr = 0.001
   #regularization terms
@@ -271,6 +273,7 @@ class NERModel(LanguageModel):
     """Constructs the network using the helper functions defined above."""
     self.config = config
     self.load_data(debug=False)
+    #self.load_data(debug=True)
     self.add_placeholders()
     window = self.add_embedding()
     y = self.add_model(window)
@@ -336,6 +339,10 @@ class NERModel(LanguageModel):
         preds = session.run(self.predictions, feed_dict=feed)
       predicted_indices = preds.argmax(axis=1)
       results.extend(predicted_indices)
+    #print('predict results')
+    #print (results)
+    #print('predict losses')
+    #print(losses)
     return np.mean(losses), results
 
 def print_confusion(confusion, num_to_tag):
@@ -349,7 +356,7 @@ def print_confusion(confusion, num_to_tag):
     for i, tag in sorted(num_to_tag.items()):
         prec = confusion[i, i] / float(total_guessed_tags[i])
         recall = confusion[i, i] / float(total_true_tags[i])
-        print ('Tag: {} - P {:2.4f} / R {:2.4f}'.format(tag, prec, recall))
+        print ('Tag: {} - Precision {:2.4f} / Recall {:2.4f}'.format(tag, prec, recall))
 
 def calculate_confusion(config, predicted_indices, y_indices):
     """Helper method that calculates confusion matrix."""
@@ -365,8 +372,10 @@ def save_predictions(predictions, filename):
   #with open(filename, "wb") as f:
   #python 3.5, prevent «TypeError: a bytes-like object is required, not 'str'» error
   with open(filename, "w") as f:
+    print ('save_predictions file opened')
     for prediction in predictions:
       f.write(str(prediction) + "\n")
+  print('save_predictions achieved')
 
 def test_NER():
   """Test NER model implementation.
@@ -379,7 +388,8 @@ def test_NER():
   with tf.Graph().as_default():
     model = NERModel(config)
 
-    init = tf.initialize_all_variables()
+    #init = tf.initialize_all_variables()
+    init = tf.global_variables_initializer()
     saver = tf.train.Saver()
 
     with tf.Session() as session:
